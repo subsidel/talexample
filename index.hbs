@@ -1,0 +1,58 @@
+{{{tal.doctype}}}
+{{{tal.rootTag}}}
+<head>
+  {{{tal.deviceHeaders}}}
+  <script>
+  var antie = {{{json tal.config compact=true}}};
+  var require = {
+    baseUrl: '/public/js',
+    paths: {
+      'sampleapp' : '/public/js/sampleapp',
+      'antie' : '/public/js/tal',
+      'lib': '/public/js/sampleapp/lib'
+
+    },
+    priority: [],
+    callback: function() {}
+  };
+  </script>
+  <link rel="stylesheet" href="/public/css/index.css"></link>
+</head>
+<body>
+  {{{tal.deviceBody}}}
+
+  <div id="static-loading-screen">load</div>
+  <div id="app"></div>
+
+  {{#if dev}}
+    <script src="//localhost:35729/livereload.js"></script>
+  {{/if}}
+
+  <script src="/public/js/tal/lib/require.js"></script>
+  <script src="/libs/react.js"></script>
+  <script src="/libs/react-dom.js"></script>
+  <script src="https://npmcdn.com/react-router/umd/ReactRouter.min.js"></script>
+  <script type='text/javascript'>
+  require(
+    [
+      'sampleapp/appui/sampleapp'
+    ],
+    function(SampleApp) {
+      require.ready(function() {
+        function onReady() {
+          var staticLoadingScreen = document.getElementById('static-loading-screen');
+          staticLoadingScreen.parentNode.removeChild(staticLoadingScreen);
+        };
+
+        new SampleApp(
+          'static/style/',
+          'static/img/',
+          onReady
+        );
+      });
+    }
+  );
+  </script>
+</script>
+</body>
+</html>

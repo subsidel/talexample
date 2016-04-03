@@ -1,0 +1,27 @@
+{
+  "name": "talexample",
+  "version": "0.0.1",
+  "description": "Example TAL app",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "express": "^4.13.4",
+    "express-handlebars": "^3.0.0",
+    "morgan": "^1.7.0",
+    "react": "^0.14.8",
+    "react-dom": "^0.14.8",
+    "tal": "^4.0.1"
+  },
+  "devDependencies": {
+    "babel-preset-react": "^6.5.0",
+    "grunt": "^0.4.5",
+    "grunt-babel": "^6.0.0",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-newer": "^1.1.2"
+  }
+}
