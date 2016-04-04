@@ -13,17 +13,18 @@ define(
         pubsub: React.PropTypes.object
       },
       componentWillMount: function () {
-        this.props.pubsub.subscribe('keyevent', this.handleKey)
+        this.keyeventToken = this.props.pubsub.subscribe('keyevent', this.handleKey)
+      },
+      componentWillUnmount: function () {
+        this.props.pubsub.unsubscribe(this.keyeventToken)
       },
       getInitialState: function () {
         return {
-          focus: this.props.initialFocus || 0,
-          select: false
+          focus: this.props.initialFocus || 0
         }
       },
       handleKey: function (name, event) {
         var focus = this.state.focus
-        var select = false
         switch (event.keyCode) {
           case KeyEvent.VK_DOWN:
             focus += 1
@@ -32,19 +33,14 @@ define(
             focus -= 1
             break
           case KeyEvent.VK_ENTER:
-            this.onSelect()
+            this.props.pubsub.publish(this.props.children[this.state.focus].props.id + 'selected')
             break
           default:
             break
         }
         this.setState({
-          focus: focus,
-          select: select
+          focus: focus
         })
-      },
-      onSelect: function () {
-        console.log(this.props.children[this.state.focus])
-        // this.props.pubsub.publish(this.props.children[this.state.focus].props.id + 'selected')
       },
       render: function () {
         var children = this.props.children.map(function (child, i) {

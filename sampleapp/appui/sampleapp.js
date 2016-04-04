@@ -20,26 +20,30 @@ define(
     var Stuff = React.createClass({
       render: function () {
         return (
-          <div>stuff</div>
+            <div>stuff</div>
         )
       }
     })
 
     var Div = React.createClass({
       render: function () {
-        console.log(this.props)
-        return <div>{this.props.children}</div>
+        return <div className={this.props.className}>{this.props.children}</div>
       }
     })
 
     var MainMenu = React.createClass({
+      componentWillMount: function () {
+        PubSub.subscribe('thing1selected', function () {
+            hashHistory.push('/stuff')
+        })
+      },
       render: function () {
         return (
           <VerticalList focus={0} pubsub={PubSub}>
-            <Div stuff='thing1'> thing! 1</Div>
-            <div id='thing2'> thing! 2</div>
-            <div id='thing3'> thing! 3</div>
-            <div id='thing4'> thing! 4</div>
+            <Div id='thing1'> Go to stuff</Div>
+            <Div id='thing2'> thing! 2</Div>
+            <Div id='thing3'> thing! 3</Div>
+            <Div id='thing4'> thing! 4</Div>
           </VerticalList>
         )
       }
@@ -55,8 +59,8 @@ define(
         ReactDOM.render(
           <Router history={hashHistory}>
             <Route path='/'>
-              <IndexRoute component={MainMenu} />
-              <Route path='stuff' component={Stuff} />
+            <IndexRoute component={MainMenu} />
+            <Route path='stuff' component={Stuff} />
             </Route>
           </Router>,
           appDiv
@@ -64,13 +68,23 @@ define(
       },
 
       run: function () {
-        // Called from run() as we need the framework to be ready beforehand.
         this.ready()
         this.render()
-        // addEventThingsToPubsSub
-        document.onkeydown = function (e) {
-          PubSub.publish('keyevent', e)
+
+        // steal TAL events
+        this._focussedWidget = { // "widget" ...
+          bubbleEvent: function (evt) {
+            if (evt.type === 'keydown') {
+              PubSub.publish('keyevent', evt)
+            }
+          }
         }
+
+        PubSub.subscribe('keyevent', function (evt, args) {
+          if(args.keyCode === KeyEvent.VK_BACK) {
+            hashHistory.goBack()
+          }
+        })
       }
     })
   }
